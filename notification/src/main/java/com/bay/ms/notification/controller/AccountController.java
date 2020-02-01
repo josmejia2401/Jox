@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bay.common.dto.EmailRegisterDTO;
+import com.bay.common.dto.notification.EmailRegisterDTO;
 import com.bay.ms.notification.event.OnRegistrationCompleteEvent;
 
 @RestController

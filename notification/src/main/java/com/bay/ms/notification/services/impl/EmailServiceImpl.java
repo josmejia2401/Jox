@@ -14,8 +14,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.bay.common.dto.AttachmentDTO;
-import com.bay.common.dto.EmailDTO;
+import com.bay.common.dto.notification.AttachmentDTO;
+import com.bay.common.dto.notification.EmailDTO;
 import com.bay.common.exceptions.CustomException;
 import com.bay.ms.notification.services.EmailService;
 

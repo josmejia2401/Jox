@@ -12,9 +12,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.bay.common.dto.FirebaseRequest;
-import com.bay.common.dto.FirebaseResponse;
-import com.bay.common.dto.PushNotificationRequest;
+import com.bay.common.dto.notification.FirebaseRequest;
+import com.bay.common.dto.notification.FirebaseResponse;
+import com.bay.common.dto.notification.PushNotificationRequest;
 import com.bay.common.exceptions.CustomException;
 import com.bay.ms.notification.interceptor.HeaderRequestInterceptor;
 import com.bay.ms.notification.services.PushService;

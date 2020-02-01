@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import com.bay.common.dto.EmailDTO;
-import com.bay.common.dto.EmailRegisterDTO;
+import com.bay.common.dto.notification.EmailDTO;
+import com.bay.common.dto.notification.EmailRegisterDTO;
 import com.bay.common.exceptions.CustomException;
 import com.bay.ms.notification.services.EmailService;
 import com.bay.ms.notification.services.MailContentBuilder;

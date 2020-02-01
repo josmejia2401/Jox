@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bay.common.dto.EmailDTO;
+import com.bay.common.dto.notification.EmailDTO;
 
 @RestController
 @RequestMapping("ms/notification/email")

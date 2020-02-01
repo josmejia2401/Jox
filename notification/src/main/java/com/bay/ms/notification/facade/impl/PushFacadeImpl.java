@@ -3,8 +3,8 @@ package com.bay.ms.notification.facade.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bay.common.dto.FirebaseResponse;
-import com.bay.common.dto.PushNotificationRequest;
+import com.bay.common.dto.notification.FirebaseResponse;
+import com.bay.common.dto.notification.PushNotificationRequest;
 import com.bay.common.exceptions.CustomException;
 import com.bay.ms.notification.facade.PushFacade;
 import com.bay.ms.notification.services.PushService;

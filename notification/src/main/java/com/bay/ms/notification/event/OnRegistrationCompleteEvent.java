@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.springframework.context.ApplicationEvent;
 
-import com.bay.common.dto.EmailRegisterDTO;
+import com.bay.common.dto.notification.EmailRegisterDTO;
 
 @SuppressWarnings("serial")
 public class OnRegistrationCompleteEvent extends ApplicationEvent {

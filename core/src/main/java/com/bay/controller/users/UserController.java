@@ -1,4 +1,4 @@
-package com.bay.controller.security;
+package com.bay.controller.users;
 
 import javax.validation.Valid;
 
@@ -17,7 +17,7 @@ import com.bay.common.dto.UserDTO;
 import com.bay.facade.security.UserFacade;
 
 @RestController
-@RequestMapping("temp")
+@RequestMapping("users/v1")
 @Validated
 @CrossOrigin(origins = "*")
 public class UserController {

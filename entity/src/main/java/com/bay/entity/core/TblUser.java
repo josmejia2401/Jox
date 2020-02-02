@@ -54,7 +54,7 @@ public class TblUser {
 	
 	@Column(name = "created", nullable = true)
 	private LocalDateTime created;
-
+	
 	public Long getId() {
 		return id;
 	}

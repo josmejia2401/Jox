@@ -3,6 +3,8 @@ package com.bay.common.dto.core;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotEmpty;
+
 public class LocationDTO implements Serializable {
 
 	/**
@@ -11,7 +13,7 @@ public class LocationDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	
+
 	private String country;
 
 	private String region;
@@ -19,15 +21,19 @@ public class LocationDTO implements Serializable {
 	private String city;
 
 	private String postalcode;
-	
-	private Float[] location;
+
+	@NotEmpty(message = "Please provide a longitude")
+	private float longitude;
+
+	@NotEmpty(message = "Please provide a latitude")
+	private float latitude;
 
 	private String metrocode;
 
 	private String areacode;
 
-	private CustomerDTO customer;
-	
+	private Long idCustomer;
+
 	private LocalDateTime created;
 
 	public Long getId() {
@@ -70,12 +76,20 @@ public class LocationDTO implements Serializable {
 		this.postalcode = postalcode;
 	}
 
-	public Float[] getLocation() {
-		return location;
+	public float getLongitude() {
+		return longitude;
 	}
 
-	public void setLocation(Float[] location) {
-		this.location = location;
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
 	}
 
 	public String getMetrocode() {
@@ -94,12 +108,13 @@ public class LocationDTO implements Serializable {
 		this.areacode = areacode;
 	}
 
-	public CustomerDTO getCustomer() {
-		return customer;
+
+	public Long getIdCustomer() {
+		return idCustomer;
 	}
 
-	public void setCustomer(CustomerDTO customer) {
-		this.customer = customer;
+	public void setIdCustomer(Long idCustomer) {
+		this.idCustomer = idCustomer;
 	}
 
 	public LocalDateTime getCreated() {

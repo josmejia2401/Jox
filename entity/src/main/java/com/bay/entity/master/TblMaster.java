@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -36,6 +37,13 @@ public class TblMaster {
 	@JoinColumn(name = "id_master")
 	private List<TblDetail> details;
 
+	@PrePersist
+	void preInsert() {
+	   if (this.created == null) {
+	       this.created = LocalDateTime.now();
+	   }
+	}
+	
 	public Long getId() {
 		return id;
 	}

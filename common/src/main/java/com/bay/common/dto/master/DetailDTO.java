@@ -3,6 +3,8 @@ package com.bay.common.dto.master;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotEmpty;
+
 public class DetailDTO implements Serializable {
 
 	/**
@@ -10,6 +12,7 @@ public class DetailDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@NotEmpty(message = "Please provide a id")
 	private Long id;
 
 	private String code;

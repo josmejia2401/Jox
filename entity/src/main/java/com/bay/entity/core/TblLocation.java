@@ -9,10 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.postgresql.geometric.PGpoint;
-
 @Entity
-@Table(name = "tbl_customers", schema = "bay_col")
+@Table(name = "tbl_locations", schema = "bay_col")
 public class TblLocation {
 
 	@Id
@@ -32,21 +30,29 @@ public class TblLocation {
 	@Column(name = "postalcode", nullable = true)
 	private String postalcode;
 
-	@Column(name = "location", nullable = true)
-	private PGpoint location;
+	@Column(name = "longitude", nullable = false)
+	private float longitude;
 
+	@Column(name = "latitude", nullable = false)
+	private float latitude;
+	
 	@Column(name = "metrocode", nullable = true)
 	private String metrocode;
 
 	@Column(name = "areacode", nullable = true)
 	private String areacode;
+	
+	@Column(name = "id_customer", nullable = false)
+	private Long idCustomer;
 
-	//@ManyToOne
-	//private TblCustomer customer;
+	/*@ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name="id_customer", nullable=false)
+	private TblCustomer customer;*/
 	
 	@Column(name = "created", nullable = true)
 	private LocalDateTime created;
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -87,12 +93,20 @@ public class TblLocation {
 		this.postalcode = postalcode;
 	}
 
-	public PGpoint getLocation() {
-		return location;
+	public float getLongitude() {
+		return longitude;
 	}
 
-	public void setLocation(PGpoint location) {
-		this.location = location;
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
 	}
 
 	public String getMetrocode() {
@@ -119,6 +133,12 @@ public class TblLocation {
 		this.created = created;
 	}
 
-	
+	public Long getIdCustomer() {
+		return idCustomer;
+	}
+
+	public void setIdCustomer(Long idCustomer) {
+		this.idCustomer = idCustomer;
+	}
 	
 }

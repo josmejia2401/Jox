@@ -2,11 +2,11 @@ package com.bay.entity.core;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -44,23 +45,30 @@ public class TblCustomer {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "id_customer")
-	private Set<TblLocation> locations;
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_customer", referencedColumnName = "id")
+	private List<TblLocation> locations;
 
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(schema = "bay_col", name = "tbl_rel_cust_emp", joinColumns = {
 			@JoinColumn(name = "id_customer") }, inverseJoinColumns = { @JoinColumn(name = "id_user") })
-	List<TblUser> employees;
-	
-	@ManyToMany(cascade = { CascadeType.ALL })
+	private List<TblUser> employees;
+
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinTable(schema = "bay_col", name = "tbl_rel_cust_tbl_details", joinColumns = {
 			@JoinColumn(name = "id_customer") }, inverseJoinColumns = { @JoinColumn(name = "id_detail") })
-	List<TblDetail> typesOfCustomers;
-	
-	@Column(name = "created", nullable = true)
+	private List<TblDetail> typesOfCustomers;
+
+	@Column(name = "created")
 	private LocalDateTime created;
 
+	@PrePersist
+	void preInsert() {
+	   if (this.created == null) {
+	       this.created = LocalDateTime.now();
+	   }
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -109,11 +117,11 @@ public class TblCustomer {
 		this.email = email;
 	}
 
-	public Set<TblLocation> getLocations() {
+	public List<TblLocation> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(Set<TblLocation> locations) {
+	public void setLocations(List<TblLocation> locations) {
 		this.locations = locations;
 	}
 
@@ -140,4 +148,5 @@ public class TblCustomer {
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
 	}
+
 }

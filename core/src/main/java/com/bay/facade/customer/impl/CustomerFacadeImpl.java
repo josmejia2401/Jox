@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bay.common.dto.core.CustomerDTO;
+import com.bay.common.dto.core.ForgotPasswordDTO;
+import com.bay.common.dto.core.VerifyAccountDTO;
+import com.bay.common.dto.response.ResponseDTO;
 import com.bay.facade.customer.CustomerFacade;
 import com.bay.services.customer.CustomerService;
 
@@ -14,13 +17,23 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	private CustomerService userService;
 
 	@Override
-	public CustomerDTO signIn(String username, String password) {
+	public ResponseDTO<CustomerDTO> signIn(String username, String password) {
 		return userService.signIn(username, password);
 	}
 
 	@Override
-	public CustomerDTO signUp(CustomerDTO user) {
+	public ResponseDTO<CustomerDTO> signUp(CustomerDTO user) {
 		return userService.signUp(user);
+	}
+
+	@Override
+	public ResponseDTO<CustomerDTO> forgotPassword(ForgotPasswordDTO forgot) {
+		return this.userService.forgotPassword(forgot);
+	}
+
+	@Override
+	public ResponseDTO<CustomerDTO> verifyAccount(VerifyAccountDTO verify) {
+		return this.userService.verifyAccount(verify);
 	}
 
 }

@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bay.common.dto.core.CustomerDTO;
+import com.bay.common.dto.core.ForgotPasswordDTO;
 import com.bay.common.dto.core.SignInDTO;
+import com.bay.common.dto.core.VerifyAccountDTO;
+import com.bay.common.dto.response.ResponseDTO;
 import com.bay.facade.customer.CustomerFacade;
 
 @RestController
@@ -22,30 +25,30 @@ import com.bay.facade.customer.CustomerFacade;
 @CrossOrigin(origins = "*")
 public class CustomerController {
 
-    @Autowired
-    private CustomerFacade customer;
-    
-    @PostMapping("/sign-in")
-    @ResponseStatus(HttpStatus.OK)
-    CustomerDTO sigIn(@Valid @RequestBody SignInDTO user) {
-        return customer.signIn(user.getUsername(), user.getPassword());
-    }
-    
-    @PostMapping("/sign-up")
-    @ResponseStatus(HttpStatus.CREATED)
-    CustomerDTO sigUp(@Validated @RequestBody CustomerDTO user) {
-        return customer.signUp(user);
-    }
-    
-    /*@PostMapping("/forgot-password")
-    @ResponseStatus(HttpStatus.OK)
-    UserDTO forgotPassword(@Validated @RequestBody UserDTO user) {
-        return userFacade.signIn();
-    }
-    
-    @PostMapping("/recovery-password")
-    @ResponseStatus(HttpStatus.OK)
-    UserDTO recoveryPassword(@Validated @RequestBody UserDTO user) {
-        return userFacade.signIn();
-    }*/
+	@Autowired
+	private CustomerFacade customer;
+
+	@PostMapping("/sign-in")
+	@ResponseStatus(HttpStatus.OK)
+	ResponseDTO<CustomerDTO> sigIn(@Valid @RequestBody SignInDTO user) {
+		return customer.signIn(user.getUsername(), user.getPassword());
+	}
+
+	@PostMapping("/sign-up")
+	@ResponseStatus(HttpStatus.CREATED)
+	ResponseDTO<CustomerDTO> sigUp(@Validated @RequestBody CustomerDTO user) {
+		return customer.signUp(user);
+	}
+
+	@PostMapping("/forgot-password")
+	@ResponseStatus(HttpStatus.OK)
+	ResponseDTO<CustomerDTO> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgot) {
+		return customer.forgotPassword(forgot);
+	}
+
+	@PostMapping("/verify-account")
+	@ResponseStatus(HttpStatus.OK)
+	ResponseDTO<CustomerDTO> verifyAccount(@Validated @RequestBody VerifyAccountDTO verify) {
+		return customer.verifyAccount(verify);
+	}
 }

@@ -23,7 +23,7 @@ public class TblToken {
 	private String token;
 
 	@Column(name = "expiry_date", nullable = false)
-	private LocalDateTime expiry_date;
+	private LocalDateTime expiryDate;
 
 	@Column(name = "state", nullable = false)
 	private String state;
@@ -60,12 +60,12 @@ public class TblToken {
 		this.token = token;
 	}
 
-	public LocalDateTime getExpiry_date() {
-		return expiry_date;
+	public LocalDateTime getExpiryDate() {
+		return expiryDate;
 	}
 
-	public void setExpiry_date(LocalDateTime expiry_date) {
-		this.expiry_date = expiry_date;
+	public void setExpiryDate(LocalDateTime expiry_date) {
+		this.expiryDate = expiry_date;
 	}
 
 	public String getState() {

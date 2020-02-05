@@ -44,6 +44,9 @@ public class TblCustomer {
 
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+	
+	@Column(name = "status", nullable = false, unique = false)
+	private String status;
 
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_customer", referencedColumnName = "id")
@@ -147,6 +150,14 @@ public class TblCustomer {
 
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

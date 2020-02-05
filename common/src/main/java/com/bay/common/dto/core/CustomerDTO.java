@@ -31,6 +31,8 @@ public class CustomerDTO implements Serializable {
 	@NotEmpty(message = "Please provide a email")
 	private String email;
 
+	private String status;
+	
 	private List<LocationDTO> locations;
 
 	private List<UserDTO> employees;
@@ -117,6 +119,14 @@ public class CustomerDTO implements Serializable {
 
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

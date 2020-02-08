@@ -1,26 +1,27 @@
 package com.bay.services.customer.impl;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.bay.common.dto.core.CustomerDTO;
 import com.bay.common.dto.core.ForgotPasswordDTO;
 import com.bay.common.dto.core.VerifyAccountDTO;
-import com.bay.common.dto.notification.EmailRegisterDTO;
+import com.bay.common.dto.notification.EmailSendDTO;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.common.exceptions.BayException;
 import com.bay.common.exceptions.CustomException;
 import com.bay.common.util.Commons;
+import com.bay.common.util.MessageUtil;
+import com.bay.common.util.RestTemplateUtil;
+import com.bay.common.util.StatusEnum;
 import com.bay.entity.core.TblCustomer;
 import com.bay.entity.core.TblToken;
 import com.bay.repositories.customer.CustomerRepository;
@@ -32,6 +33,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
+	@Value("${app.ms.bay.urlSendCodeActivation}")
+	private String urlSendCodeActivation;
+	
+	@Value("${app.ms.bay.urlSendRecoverAccount}")
+	private String urlSendRecoverAccount;
+	
+	@Value("${app.ms.bay.urlSendWelcome}")
+	private String urlSendWelcome;
+	
 	@Autowired
 	private CustomerRepository userRepo;
 
@@ -42,7 +52,11 @@ public class CustomerServiceImpl implements CustomerService {
 	private ModelMapper modelMapper;
 
 	@Autowired
-	private RestTemplate restTemplate;
+	private RestTemplateUtil restTemplateUtil;
+	
+	@Autowired
+	private MessageUtil messageUtil;
+	
 
 	@Override
 	public ResponseDTO<CustomerDTO> signIn(String username, String password) {
@@ -54,27 +68,26 @@ public class CustomerServiceImpl implements CustomerService {
 					dto.setPassword("");
 					return dto;
 				}).orElse(null);
-				
 				ResponseDTO<CustomerDTO> response = new ResponseDTO<>();
 				response.setCode(1L);
 				response.setData(null);
-				response.setMessage("Error de inicio de sesión; ID de usuario o contraseña no válidos.");
-				
 				if (customerDto != null && customerDto.getStatus() != null && customerDto.getStatus().equalsIgnoreCase("A")) {
 					response.setCode(0L);
 					response.setData(customerDto);
 					response.setMessage("OK");
+				} else {
+					response.setMessage(messageUtil.getMessage("customer.signin.error.credential_invalid"));
 				}
 				return response;
 			} else {
-				throw new BayException("Error de inicio de sesión; ID de usuario o contraseña no válidos.");
+				throw new BayException(messageUtil.getMessage("customer.signin.error.credential_invalid"));
 			}
 		} catch (BayException e) {
 			LOGGER.error("ERROR: CustomerServiceImpl.signIn.BayException", e);
 			throw e;
 		} catch (Exception e) {
 			LOGGER.error("ERROR: CustomerServiceImpl.signIn.Exception", e);
-			throw new CustomException("Error de inicio de sesión; Falla interna, intente mas tarde por favor.", e);
+			throw new CustomException(messageUtil.getMessage("customer.signin.error.internal_failure"), e);
 		} finally {
 			LOGGER.debug("CustomerServiceImpl.signIn finish");
 		}
@@ -90,42 +103,48 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			if (user != null) {
 				TblCustomer entity = modelMapper.map(user, TblCustomer.class);
+				entity.setStatus(StatusEnum.INACTIVE.getCode());
 				entity = userRepo.save(entity);
+				
 				this.generarTokenVerificacion(entity.getId());
 				final CustomerDTO dto = modelMapper.map(entity, CustomerDTO.class);
 				dto.setPassword("");
-				CompletableFuture.supplyAsync(() -> {
-					enviarCodigoActivacion(dto);
-					return "";
-				});
+				
+				EmailSendDTO emailSend = new EmailSendDTO();
+				List<String> email = new ArrayList<String>();
+				email.add(entity.getEmail());
+				emailSend.setTo(email);
+				restTemplateUtil.sendAsync(emailSend, this.urlSendCodeActivation);
+				
 				ResponseDTO<CustomerDTO> response = new ResponseDTO<>();
 				response.setCode(0L);
 				response.setData(dto);
-				response.setMessage("Se ha enviado un enlace para activar su cuenta " + user.getEmail());
+				response.setMessage(messageUtil.getMessage("customer.signup.message.link_send", new String[] {user.getEmail()}));
 				return response;
 			} else {
-				throw new BayException("Error de creación de cuenta; Ingrese la información requerida.");
+				throw new BayException(messageUtil.getMessage("customer.signup.error.invalid_account"));
 			}
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {
 			LOGGER.error("ERROR: CustomerServiceImpl.signUp.DataIntegrityViolationException", e);
-			throw new CustomException("Error de creación de cuenta; Ya existe el usuario o email", e);
+			throw new CustomException(messageUtil.getMessage("customer.signup.error.account_exists"), e);
 		} catch (Exception e) {
 			LOGGER.error("ERROR: CustomerServiceImpl.signUp.Exception", e);
-			throw new CustomException("Error de creación de cuenta; Falla interna, intente mas tarde por favor.", e);
+			throw new CustomException(messageUtil.getMessage("customer.signup.error.internal_failure"), e);
 		} finally {
 			LOGGER.debug("CustomerServiceImpl.signUp finish");
 		}
 	}
 
+	/**
+	 * Existe la posibilidad, cuando se recupere enviar un token, y hacer el mismo proceso de verificar cuenta.
+	 */
 	@Override
 	public ResponseDTO<CustomerDTO> forgotPassword(ForgotPasswordDTO forgot) {
 		try {
 			LOGGER.debug("CustomerServiceImpl.forgotPassword start with data: {} ", forgot);
-			ResponseDTO<CustomerDTO> response = new ResponseDTO<>();
-			response.setCode(1L);
+			ResponseDTO<CustomerDTO> response = new ResponseDTO<CustomerDTO>();
 			response.setData(null);
-			response.setMessage("Si esa dirección de correo electrónico está en nuestra base de datos, le enviaremos un correo electrónico para restablecer su contraseña.");
-			
+			response.setMessage(messageUtil.getMessage("customer.forgotpassword.message.send_message"));
 			if (forgot.getEmail() != null && !forgot.getEmail().isEmpty()) {
 				final CustomerDTO customer = this.userRepo.findByEmail(forgot.getEmail()).map(x -> {
 					CustomerDTO dto = modelMapper.map(x, CustomerDTO.class);
@@ -133,19 +152,23 @@ public class CustomerServiceImpl implements CustomerService {
 					return dto;
 				}).orElse(null);
 				if (customer != null) {
-					CompletableFuture.supplyAsync(() -> {
-						this.enviarRecuperarCuenta(customer);
-						return "";
-					});
+					EmailSendDTO emailSend = new EmailSendDTO();
+					List<String> email = new ArrayList<String>();
+					email.add(customer.getEmail());
+					emailSend.setTo(email);
+					restTemplateUtil.sendAsync(emailSend, this.urlSendRecoverAccount);
 					response.setCode(0L);
-					response.setData(null);
-					response.setMessage("Si esa dirección de correo electrónico está en nuestra base de datos, le enviaremos un correo electrónico para restablecer su contraseña.");
+				} else {
+					response.setCode(3L);
 				}
+			} else {
+				response.setCode(1L);
+				response.setMessage(messageUtil.getMessage("customer.forgotpassword.error.required_information"));
 			}
 			return response;
 		} catch (Exception e) {
 			LOGGER.error("ERROR: CustomerServiceImpl.forgotPassword.Exception", e);
-			throw new CustomException("Error de recuperar cuenta; Falla interna, intente mas tarde por favor.", e);
+			throw new CustomException(messageUtil.getMessage("customer.forgotpassword.error.internal_failure"), e);
 		} finally {
 			LOGGER.debug("CustomerServiceImpl.forgotPassword finish");
 		}
@@ -158,32 +181,36 @@ public class CustomerServiceImpl implements CustomerService {
 			ResponseDTO<CustomerDTO> response = new ResponseDTO<>();
 			response.setCode(1L);
 			response.setData(null);
-			response.setMessage("Código no es válido.");
-			TblCustomer customer = null;
-			if (verify.getEmail() != null && !verify.getEmail().isEmpty()) {
-				customer = this.userRepo.findByEmail(verify.getEmail()).orElse(null);
-			} else if (verify.getUsername() != null && !verify.getUsername().isEmpty()) {
-				customer = this.userRepo.findByEmail(verify.getUsername()).orElse(null);
-			}
+			TblCustomer customer = this.userRepo.findByEmail(verify.getEmail()).orElseThrow(() -> new CustomException(this.messageUtil.getMessage("customer.verifyaccount.error.invalid_information")));
 			TblToken tblToken = tokenRepo.findTokenUserId(customer.getId(), verify.getToken(), LocalDateTime.now()).orElse(null);
 			if (tblToken != null) {
-				tblToken.setState("R");
+				tblToken.setStatus(StatusEnum.RECOVERED.getCode());
 				tokenRepo.save(tblToken);
-				customer.setStatus("A");
+				
+				customer.setStatus(StatusEnum.ACTIVE.getCode());
 				this.userRepo.save(customer);
+				
 				final CustomerDTO dto = modelMapper.map(customer, CustomerDTO.class);
-				CompletableFuture.supplyAsync(() -> {
-					this.enviarBienvenido(dto);
-					return "";
-				});
+				
+				EmailSendDTO emailSend = new EmailSendDTO();
+				List<String> email = new ArrayList<String>();
+				email.add(dto.getEmail());
+				emailSend.setTo(email);
+				restTemplateUtil.sendAsync(emailSend, this.urlSendWelcome);
+				
 				response.setCode(0L);
 				response.setData(null);
-				response.setMessage("Cuenta verificada correctamente.");
+				response.setMessage(this.messageUtil.getMessage("customer.verifyaccount.message.correctly_verified"));
+			} else {
+				response.setMessage(this.messageUtil.getMessage("customer.verifyaccount.error.invalid_information"));
 			}
 			return response;
+		} catch (CustomException e) {
+			LOGGER.error("ERROR: CustomerServiceImpl.verifyAccount.CustomException", e);
+			throw e;
 		} catch (Exception e) {
 			LOGGER.error("ERROR: CustomerServiceImpl.verifyAccount.Exception", e);
-			throw new CustomException("Error de verificar cuenta; Falla interna, intente mas tarde por favor.", e);
+			throw new CustomException(this.messageUtil.getMessage("customer.verifyaccount.error.internal_failure"), e);
 		} finally {
 			LOGGER.debug("CustomerServiceImpl.verifyAccount finish");
 		}
@@ -193,55 +220,9 @@ public class CustomerServiceImpl implements CustomerService {
 		TblToken token = new TblToken();
 		token.setExpiryDate(LocalDateTime.now().plusMinutes(60));
 		token.setIdCustomer(idCustomer);
-		token.setState("C");
+		token.setStatus(StatusEnum.CREATED.getCode());
 		token.setToken(String.valueOf(Commons.generatedPin()));
-		token.setType_token("V");
+		token.setTypeToken("V");
 		tokenRepo.save(token);
-	}
-	
-	private void enviarRecuperarCuenta(final CustomerDTO dto) {
-		try {
-			EmailRegisterDTO email = new EmailRegisterDTO();
-			email.setTo(dto.getEmail());
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<EmailRegisterDTO> entity = new HttpEntity<>(email, headers);
-			String fooResourceUrl = "http://localhost:8081/ms-notification-dev/ms/notification/account/forgot-account";
-			restTemplate.postForEntity(fooResourceUrl, entity, EmailRegisterDTO.class);
-		} catch (Exception e) {
-			LOGGER.error("ERROR: CustomerServiceImpl.enviarRecuperarCuenta", e);
-		}
-	}
-	
-	/**
-	 * Cuenta activada - bienvenida al usuario.
-	 * @param dto
-	 */
-	private void enviarBienvenido(final CustomerDTO dto) {
-		try {
-			EmailRegisterDTO email = new EmailRegisterDTO();
-			email.setTo(dto.getEmail());
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<EmailRegisterDTO> entity = new HttpEntity<>(email, headers);
-			String fooResourceUrl = "http://localhost:8081/ms-notification-dev/ms/notification/account/welcome";
-			restTemplate.postForEntity(fooResourceUrl, entity, EmailRegisterDTO.class);
-		} catch (Exception e) {
-			LOGGER.error("ERROR: CustomerServiceImpl.enviarBienvenido", e);
-		}
-	}
-	
-	private void enviarCodigoActivacion(final CustomerDTO dto) {
-		try {
-			EmailRegisterDTO email = new EmailRegisterDTO();
-			email.setTo(dto.getEmail());
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<EmailRegisterDTO> entity = new HttpEntity<>(email, headers);
-			String fooResourceUrl = "http://localhost:8081/ms-notification-dev/ms/notification/account/code-activation";
-			restTemplate.postForEntity(fooResourceUrl, entity, EmailRegisterDTO.class);
-		} catch (Exception e) {
-			LOGGER.error("ERROR: CustomerServiceImpl.enviarCodigoActivacion", e);
-		}
 	}
 }

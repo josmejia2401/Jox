@@ -25,11 +25,11 @@ public class TblToken {
 	@Column(name = "expiry_date", nullable = false)
 	private LocalDateTime expiryDate;
 
-	@Column(name = "state", nullable = false)
-	private String state;
+	@Column(name = "status", nullable = false)
+	private String status;
 
 	@Column(name = "type_token", nullable = false)
-	private String type_token;
+	private String typeToken;
 
 	@Column(name = "id_customer", nullable = false)
 	private Long idCustomer;
@@ -68,20 +68,21 @@ public class TblToken {
 		this.expiryDate = expiry_date;
 	}
 
-	public String getState() {
-		return state;
+	
+	public String getStatus() {
+		return status;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
-	public String getType_token() {
-		return type_token;
+	public String getTypeToken() {
+		return typeToken;
 	}
 
-	public void setType_token(String type_token) {
-		this.type_token = type_token;
+	public void setTypeToken(String typeToken) {
+		this.typeToken = typeToken;
 	}
 
 	public Long getIdCustomer() {

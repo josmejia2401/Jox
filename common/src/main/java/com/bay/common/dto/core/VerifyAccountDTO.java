@@ -2,21 +2,23 @@ package com.bay.common.dto.core;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
 public class VerifyAccountDTO implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String username;
+	
+	@NotEmpty(message = "{validation.email.notempty}")
+	@Email
 	private String email;
+	
+	@NotEmpty(message = "{validation.token.notempty}") 
 	private String token;
 	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
+	
 	public String getEmail() {
 		return email;
 	}

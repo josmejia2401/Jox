@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @PropertySource({ "classpath:application-dev.properties" })
 @Profile("dev")
 public class PropertiesSourceDev extends WebSecurityConfigurerAdapter {
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
@@ -35,4 +36,6 @@ public class PropertiesSourceDev extends WebSecurityConfigurerAdapter {
 	    executor.initialize();
 	    return executor;
 	  }
+	
+	
 }

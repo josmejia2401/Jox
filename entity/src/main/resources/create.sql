@@ -50,6 +50,7 @@ create table if not exists bay_col.tbl_customers (
 	date_created	timestamp,
 	username		text UNIQUE not null,
 	password		text not null,
+	status			text not null,
 	email			text UNIQUE not null,
 	created			timestamp with time zone default current_timestamp
 );
@@ -74,8 +75,8 @@ create table if not exists bay_col.tbl_tokens
    id      		serial primary key,
    token    	text not null,
    expiry_date  timestamp with time ZONE  CHECK (expiry_date > created)  not null,
-   state		text  not null CHECK (state in ('C', 'R', 'V')) default 'C',
-   type_token	text  not null CHECK (type_token in ('S', 'V')) default 'S',
+   status		text  not null,
+   type_token	text  not null,
    id_customer  integer not null references bay_col.tbl_customers(id),
    created		timestamp with time zone default current_timestamp
 );

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.bay.common.dto.core.CustomerDTO;
 import com.bay.common.dto.core.ForgotPasswordDTO;
+import com.bay.common.dto.core.ForgotPasswordStep2DTO;
 import com.bay.common.dto.core.VerifyAccountDTO;
 import com.bay.common.dto.notification.EmailSendDTO;
 import com.bay.common.dto.response.ResponseDTO;
@@ -152,10 +153,18 @@ public class CustomerServiceImpl implements CustomerService {
 					return dto;
 				}).orElse(null);
 				if (customer != null) {
+					TblToken tblToken = tokenRepo.findTokenValid(customer.getId(), LocalDateTime.now()).orElse(null);
+					String token = null;
+					if (tblToken == null) {
+						token = this.generarTokenVerificacion(customer.getId());
+					} else {
+						token = tblToken.getToken();
+					}
 					EmailSendDTO emailSend = new EmailSendDTO();
 					List<String> email = new ArrayList<String>();
 					email.add(customer.getEmail());
 					emailSend.setTo(email);
+					emailSend.setBody(token);
 					restTemplateUtil.sendAsync(emailSend, this.urlSendRecoverAccount);
 					response.setCode(0L);
 				} else {
@@ -174,6 +183,49 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 
+	@Override
+	public ResponseDTO<CustomerDTO> forgotPasswordStep2(ForgotPasswordStep2DTO forgot) {
+		try {
+			LOGGER.debug("CustomerServiceImpl.forgotPasswordStep2 start with data: {} ", forgot);
+			ResponseDTO<CustomerDTO> response = new ResponseDTO<>();
+			response.setCode(1L);
+			response.setData(null);
+			TblCustomer customer = this.userRepo.findByEmail(forgot.getEmail()).orElseThrow(() -> new CustomException(this.messageUtil.getMessage("customer.forgotpasswordstep2.error.invalid_information")));
+			TblToken tblToken = tokenRepo.findTokenUserId(customer.getId(), forgot.getToken(), LocalDateTime.now()).orElse(null);
+			if (tblToken != null) {
+				tblToken.setStatus(StatusEnum.RECOVERED.getCode());
+				tokenRepo.save(tblToken);
+				
+				customer.setStatus(StatusEnum.ACTIVE.getCode());
+				customer.setPassword(forgot.getPassword());
+				this.userRepo.save(customer);
+				
+				final CustomerDTO dto = modelMapper.map(customer, CustomerDTO.class);
+				
+				EmailSendDTO emailSend = new EmailSendDTO();
+				List<String> email = new ArrayList<String>();
+				email.add(dto.getEmail());
+				emailSend.setTo(email);
+				restTemplateUtil.sendAsync(emailSend, this.urlSendWelcome);
+				
+				response.setCode(0L);
+				response.setData(null);
+				response.setMessage(this.messageUtil.getMessage("customer.forgotpasswordstep2.message.correctly_verified"));
+			} else {
+				response.setMessage(this.messageUtil.getMessage("customer.forgotpasswordstep2.error.invalid_information"));
+			}
+			return response;
+		} catch (CustomException e) {
+			LOGGER.error("ERROR: CustomerServiceImpl.forgotPasswordStep2.CustomException", e);
+			throw e;
+		} catch (Exception e) {
+			LOGGER.error("ERROR: CustomerServiceImpl.forgotPasswordStep2.Exception", e);
+			throw new CustomException(this.messageUtil.getMessage("customer.forgotpasswordstep2.error.internal_failure"), e);
+		} finally {
+			LOGGER.debug("CustomerServiceImpl.forgotPasswordStep2 finish");
+		}
+	}
+	
 	@Override
 	public  ResponseDTO<CustomerDTO> verifyAccount(VerifyAccountDTO verify) {
 		try {
@@ -216,7 +268,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 	
-	private void generarTokenVerificacion(Long idCustomer) {
+	private String generarTokenVerificacion(Long idCustomer) {
 		TblToken token = new TblToken();
 		token.setExpiryDate(LocalDateTime.now().plusMinutes(60));
 		token.setIdCustomer(idCustomer);
@@ -224,5 +276,8 @@ public class CustomerServiceImpl implements CustomerService {
 		token.setToken(String.valueOf(Commons.generatedPin()));
 		token.setTypeToken("V");
 		tokenRepo.save(token);
+		return token.getToken();
 	}
+
+
 }

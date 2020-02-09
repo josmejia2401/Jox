@@ -13,6 +13,9 @@ import com.bay.entity.core.TblToken;
 @Repository
 public interface TokenRepository extends CrudRepository<TblToken, Long> {
 	
-	@Query(value = "SELECT u FROM TblToken u WHERE u.idCustomer =:idCustomer AND u.token =:token AND u.status = 'C' AND u.expiryDate <= :expiryDate",  nativeQuery = false)
+	@Query(value = "SELECT u FROM TblToken u WHERE u.idCustomer =:idCustomer AND u.token =:token AND u.status = 'C' AND u.expiryDate >= :expiryDate",  nativeQuery = false)
     Optional<TblToken> findTokenUserId(@Param("idCustomer") Long idCustomer, @Param("token") String token, @Param("expiryDate") LocalDateTime expiryDate);
+	
+	@Query(value = "SELECT u FROM TblToken u WHERE u.idCustomer =:idCustomer AND u.status = 'C' AND u.expiryDate >= :expiryDate",  nativeQuery = false)
+    Optional<TblToken> findTokenValid(@Param("idCustomer") Long idCustomer, @Param("expiryDate") LocalDateTime expiryDate);
 }

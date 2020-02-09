@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bay.common.dto.core.CustomerDTO;
 import com.bay.common.dto.core.ForgotPasswordDTO;
+import com.bay.common.dto.core.ForgotPasswordStep2DTO;
 import com.bay.common.dto.core.SignInDTO;
 import com.bay.common.dto.core.VerifyAccountDTO;
 import com.bay.common.dto.response.ResponseDTO;
@@ -45,6 +46,13 @@ public class CustomerController {
 	ResponseDTO<CustomerDTO> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgot) {
 		return customer.forgotPassword(forgot);
 	}
+	
+	@PostMapping("/forgot-password-step-2")
+	@ResponseStatus(HttpStatus.OK)
+	ResponseDTO<CustomerDTO> forgotPasswordStep2(@Valid @RequestBody ForgotPasswordStep2DTO forgot) {
+		return customer.forgotPasswordStep2(forgot);
+	}
+
 
 	@PostMapping("/verify-account")
 	@ResponseStatus(HttpStatus.OK)

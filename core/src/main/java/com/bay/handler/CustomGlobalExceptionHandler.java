@@ -20,29 +20,37 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.bay.common.exceptions.BayException;
 import com.bay.common.exceptions.CustomErrorResponse;
-import com.bay.common.exceptions.NotFoundException;
+import com.bay.common.exceptions.CustomException;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<CustomErrorResponse> customHandleNotFound(Exception ex, WebRequest request) {
-		CustomErrorResponse errors = new CustomErrorResponse();
-		errors.setTimestamp(LocalDateTime.now());
-		errors.setError(ex.getMessage());
-		errors.setStatus(HttpStatus.NOT_FOUND.value());
-		return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
-
-	}
-
-	@ExceptionHandler({Exception.class, BayException.class})
-	public ResponseEntity<CustomErrorResponse> springHandleDefaultError(Exception ex, WebRequest request) {
+	@ExceptionHandler(BayException.class)
+	public ResponseEntity<CustomErrorResponse> customHandleBayException(Exception ex, WebRequest request) {
 		CustomErrorResponse errors = new CustomErrorResponse();
 		errors.setTimestamp(LocalDateTime.now());
 		errors.setError(ex.getMessage());
 		errors.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-		return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
+		return ResponseEntity.status(HttpStatus.OK).body(errors);
+	}
+	
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<CustomErrorResponse> customHandleCustomException(Exception ex, WebRequest request) {
+		CustomErrorResponse errors = new CustomErrorResponse();
+		errors.setTimestamp(LocalDateTime.now());
+		errors.setError(ex.getMessage());
+		errors.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return ResponseEntity.status(HttpStatus.OK).body(errors);
+	}
 
+
+	@ExceptionHandler({Exception.class})
+	public ResponseEntity<?> springHandleDefaultError(Exception ex, WebRequest request) {
+		CustomErrorResponse errors = new CustomErrorResponse();
+		errors.setTimestamp(LocalDateTime.now());
+		errors.setError(ex.getMessage());
+		errors.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
 	}
 
 	/*@ExceptionHandler(BookUnSupportedFieldPatchException.class)

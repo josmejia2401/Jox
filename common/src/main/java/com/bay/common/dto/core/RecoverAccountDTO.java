@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-public class ForgotPasswordStep2DTO implements Serializable {
+public class RecoverAccountDTO implements Serializable {
 	/**
 	 * 
 	 */

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.bay.common.dto.core.CustomerDTO;
 import com.bay.common.dto.core.ForgotPasswordDTO;
-import com.bay.common.dto.core.ForgotPasswordStep2DTO;
+import com.bay.common.dto.core.RecoverAccountDTO;
 import com.bay.common.dto.core.VerifyAccountDTO;
 import com.bay.common.dto.notification.EmailSendDTO;
 import com.bay.common.dto.response.ResponseDTO;
@@ -184,7 +184,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public ResponseDTO<CustomerDTO> forgotPasswordStep2(ForgotPasswordStep2DTO forgot) {
+	public ResponseDTO<CustomerDTO> forgotPasswordStep2(RecoverAccountDTO forgot) {
 		try {
 			LOGGER.debug("CustomerServiceImpl.forgotPasswordStep2 start with data: {} ", forgot);
 			ResponseDTO<CustomerDTO> response = new ResponseDTO<>();

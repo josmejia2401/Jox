@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.bay.common.dto.core.CustomerDTO;
 import com.bay.common.dto.core.ForgotPasswordDTO;
-import com.bay.common.dto.core.ForgotPasswordStep2DTO;
+import com.bay.common.dto.core.RecoverAccountDTO;
 import com.bay.common.dto.core.VerifyAccountDTO;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.facade.customer.CustomerFacade;
@@ -38,7 +38,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	}
 
 	@Override
-	public ResponseDTO<CustomerDTO> forgotPasswordStep2(ForgotPasswordStep2DTO forgot) {
+	public ResponseDTO<CustomerDTO> forgotPasswordStep2(RecoverAccountDTO forgot) {
 		return this.userService.forgotPasswordStep2(forgot);
 	}
 

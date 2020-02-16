@@ -30,6 +30,9 @@ public class CustomerDTO implements Serializable {
 
 	@NotEmpty(message = "Please provide a email")
 	private String email;
+	
+	@NotEmpty(message = "Please provide a phone")
+	private String phone;
 
 	private String status;
 	
@@ -87,6 +90,14 @@ public class CustomerDTO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public List<LocationDTO> getLocations() {

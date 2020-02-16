@@ -52,6 +52,7 @@ create table if not exists bay_col.tbl_customers (
 	password		text not null,
 	status			text not null,
 	email			text UNIQUE not null,
+	phone			text UNIQUE not null,
 	created			timestamp with time zone default current_timestamp
 );
 

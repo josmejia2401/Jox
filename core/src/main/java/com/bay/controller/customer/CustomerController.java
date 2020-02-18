@@ -49,7 +49,7 @@ public class CustomerController {
 	
 	@PostMapping("/recover-account")
 	@ResponseStatus(HttpStatus.OK)
-	ResponseDTO<CustomerDTO> forgotPasswordStep2(@Valid @RequestBody RecoverAccountDTO forgot) {
+	ResponseDTO<CustomerDTO> recoverAccount(@Valid @RequestBody RecoverAccountDTO forgot) {
 		return customer.forgotPasswordStep2(forgot);
 	}
 

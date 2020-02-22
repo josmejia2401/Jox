@@ -48,4 +48,17 @@ public class RestTemplateUtil {
 			return "";
 		});
 	}
+	
+	public <T> T consumeWs(final T dto, final String targetUrl) {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<T> entity = new HttpEntity<>(dto, headers);
+			ResponseEntity<T> entityResponse = (ResponseEntity<T>) restTemplate.postForEntity(targetUrl, entity, Object.class);
+			return entityResponse.getBody();
+		} catch (Exception e) {
+			LOGGER.error("ERROR: RestTemplateUtil.sendAsync", e);
+			throw e;
+		}
+	}
 }

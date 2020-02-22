@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.bay.common.dto.core.LocationDTO;
-import com.bay.entity.core.TblLocation;
+import com.bay.entity.core.location.TblLocation;
 
 @SpringBootApplication
 @EnableAsync

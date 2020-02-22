@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bay.common.dto.core.LocationDTO;
 import com.bay.common.exceptions.NotSaveException;
-import com.bay.entity.core.TblLocation;
+import com.bay.entity.core.location.TblLocation;
 import com.bay.repositories.customer.LocationRepository;
 import com.bay.services.customer.LocationService;
 

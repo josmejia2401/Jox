@@ -1,4 +1,4 @@
-package com.bay.entity.core;
+package com.bay.entity.core.token;
 
 import java.time.LocalDateTime;
 

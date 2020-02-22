@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.bay.entity.core.TblCustomer;
+import com.bay.entity.core.customer.TblCustomer;
 
 @Repository
 public interface CustomerRepository extends CrudRepository<TblCustomer, Long> {

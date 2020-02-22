@@ -71,6 +71,15 @@ create table if not exists bay_col.tbl_locations
    created		timestamp with time zone default current_timestamp
 );
 
+create table if not exists bay_col.tbl_posts_customers
+(
+   id      		serial primary key,
+   text	    	text,
+   files_names 	text[],
+   id_customer  integer not null references bay_col.tbl_customers(id),
+   created		timestamp with time zone default current_timestamp
+);
+
 create table if not exists bay_col.tbl_tokens
 (
    id      		serial primary key,

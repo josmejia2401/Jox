@@ -1,4 +1,4 @@
-package com.bay.entity.core;
+package com.bay.entity.core.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,24 +6,22 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.bay.entity.master.TblDetail;
 
 @Entity
-@Table(name = "tbl_customers", schema = "bay_col", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
+@Table(name = "tbl_users", schema = "bay_col", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
 		@UniqueConstraint(columnNames = "email") })
-public class TblCustomer {
+public class TblUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,33 +42,18 @@ public class TblCustomer {
 
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
-	
-	@Column(name = "status", nullable = false, unique = false)
-	private String status;
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_customer", referencedColumnName = "id")
-	private List<TblLocation> locations;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_gender", referencedColumnName = "id")
+	private TblDetail gender;
 
 	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(schema = "bay_col", name = "tbl_rel_cust_emp", joinColumns = {
-			@JoinColumn(name = "id_customer") }, inverseJoinColumns = { @JoinColumn(name = "id_user") })
-	private List<TblUser> employees;
-
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-	@JoinTable(schema = "bay_col", name = "tbl_rel_cust_tbl_details", joinColumns = {
-			@JoinColumn(name = "id_customer") }, inverseJoinColumns = { @JoinColumn(name = "id_detail") })
-	private List<TblDetail> typesOfCustomers;
-
-	@Column(name = "created")
+	@JoinTable(schema = "bay_col", name = "tbl_rel_emp_tbl_details", joinColumns = {
+			@JoinColumn(name = "id_user") }, inverseJoinColumns = { @JoinColumn(name = "id_detail") })
+	List<TblDetail> typesOfEmployees;
+	
+	@Column(name = "created", nullable = true)
 	private LocalDateTime created;
-
-	@PrePersist
-	void preInsert() {
-	   if (this.created == null) {
-	       this.created = LocalDateTime.now();
-	   }
-	}
 	
 	public Long getId() {
 		return id;
@@ -120,28 +103,20 @@ public class TblCustomer {
 		this.email = email;
 	}
 
-	public List<TblLocation> getLocations() {
-		return locations;
+	public TblDetail getGender() {
+		return gender;
 	}
 
-	public void setLocations(List<TblLocation> locations) {
-		this.locations = locations;
+	public void setGender(TblDetail gender) {
+		this.gender = gender;
 	}
 
-	public List<TblUser> getEmployees() {
-		return employees;
+	public List<TblDetail> getTypesOfEmployees() {
+		return typesOfEmployees;
 	}
 
-	public void setEmployees(List<TblUser> employees) {
-		this.employees = employees;
-	}
-
-	public List<TblDetail> getTypesOfCustomers() {
-		return typesOfCustomers;
-	}
-
-	public void setTypesOfCustomers(List<TblDetail> typesOfCustomers) {
-		this.typesOfCustomers = typesOfCustomers;
+	public void setTypesOfEmployees(List<TblDetail> typesOfEmployees) {
+		this.typesOfEmployees = typesOfEmployees;
 	}
 
 	public LocalDateTime getCreated() {
@@ -152,12 +127,9 @@ public class TblCustomer {
 		this.created = created;
 	}
 
-	public String getStatus() {
-		return status;
-	}
+	// @ManyToMany(mappedBy = "users")
+	// private Set<TblCustomer> customers = new HashSet<>();
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
+	
+	
 }

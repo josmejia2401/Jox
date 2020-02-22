@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.bay.entity.core.TblToken;
+import com.bay.entity.core.token.TblToken;
 
 @Repository
 public interface TokenRepository extends CrudRepository<TblToken, Long> {

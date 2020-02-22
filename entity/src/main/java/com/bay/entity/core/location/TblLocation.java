@@ -1,4 +1,4 @@
-package com.bay.entity.core;
+package com.bay.entity.core.location;
 
 import java.time.LocalDateTime;
 

@@ -12,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bay.common.dto.core.LocationDTO;
 import com.bay.common.dto.core.post.PostCustomerDTO;
-import com.bay.common.dto.file.FileDTO;
-import com.bay.common.dto.file.UploadFileResponse;
+import com.bay.common.dto.filemananer.FileDTO;
+import com.bay.common.dto.filemananer.UploadFileResponse;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.common.exceptions.BayException;
 import com.bay.common.exceptions.CustomException;
@@ -58,17 +58,15 @@ public class PostServiceImpl implements PostService {
 		try {
 			if (post != null) {
 				ResponseDTO<PostCustomerDTO> response = new ResponseDTO<>();
+				List<UploadFileResponse> result = this.saveFiles(post, files);
+				List<String> path = result.stream().map(x -> x.getFileDownloadUri()).collect(Collectors.toList());
+				post.setFilesNames(path.toArray(new String[path.size()]));
 				TblPostCustomer entity = modelMapper.map(post, TblPostCustomer.class);
 				entity = postRepo.save(entity);
 				if (entity != null && entity.getId() != null && entity.getId() != 0) {
-					PostCustomerDTO dto = modelMapper.map(entity, PostCustomerDTO.class);
-					List<UploadFileResponse> result = this.saveFiles(dto, files);
-					List<String> path = result.stream().map(x -> x.getFileDownloadUri()).collect(Collectors.toList());
-					entity.setFilesNames(path.toArray(new String[path.size()]));
-					entity = postRepo.save(entity);
-					dto.setFilesNames(entity.getFilesNames());
+					post.setId(entity.getId());
 					response.setCode(0L);
-					response.setData(dto);
+					response.setData(post);
 				} else {
 					response.setCode(1L);
 					response.setData(null);
@@ -95,11 +93,10 @@ public class PostServiceImpl implements PostService {
 		return null;
 	}
 	
-	private List<UploadFileResponse> saveFiles(PostCustomerDTO dto, MultipartFile[] files) {
-		FileDTO<PostCustomerDTO> file = new FileDTO<PostCustomerDTO>();
-		file.setData(dto);
-		file.setFiles(files);
-		return this.fileService.add(file);
+	private List<UploadFileResponse> saveFiles(final PostCustomerDTO dto, final MultipartFile[] files) {
+		FileDTO file = new FileDTO();
+		file.setUsername(dto.getIdCustomer().toString());
+		return this.fileService.add(file, files);
 	}
 
 }

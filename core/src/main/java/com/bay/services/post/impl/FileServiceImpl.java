@@ -1,5 +1,6 @@
 package com.bay.services.post.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,71 +16,54 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bay.common.dto.core.post.PostCustomerDTO;
-import com.bay.common.dto.file.FileDTO;
-import com.bay.common.dto.file.UploadFileResponse;
-import com.bay.common.exceptions.BayException;
-import com.bay.common.exceptions.CustomException;
-import com.bay.common.util.MessageUtil;
+import com.bay.common.dto.filemananer.FileDTO;
+import com.bay.common.dto.filemananer.UploadFileResponse;
+import com.bay.common.exceptions.FileManagerException;
+import com.bay.common.util.MultipartInputStreamFileResource;
 import com.bay.services.file.FileService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class FileServiceImpl implements FileService<PostCustomerDTO> {
-
+public class FileServiceImpl implements FileService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileServiceImpl.class);
-	
-	@Autowired
-	private MessageUtil messageUtil;
 
 	@Autowired
 	private RestTemplate restTemplate;
-
+	
+	@Autowired
+	private ObjectMapper mapper;
+	
 	@Override
-	public List<UploadFileResponse> add(FileDTO<PostCustomerDTO> file) {
-		LOGGER.debug("FileServiceImpl.add start with data: {}", file);
+	public List<UploadFileResponse> add(FileDTO info, MultipartFile[] files) throws FileManagerException {
 		try {
-			if (file != null && file.getData() != null) {
-				List<UploadFileResponse> result = this.consumeWs(file);
-				return result;
-			} else {
-				throw new BayException(messageUtil.getMessage("customer.signin.error.credential_invalid"));
+			if (mapper == null) {
+				 mapper = new ObjectMapper();
 			}
-		} catch (BayException e) {
-			LOGGER.error("ERROR: CustomerServiceImpl.signIn.BayException", e);
-			throw e;
+			final String targetUrl = "localhost:8082/ms-filemanager-dev/api/post/upload";			
+			final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+			for (MultipartFile file : files) {
+	            if (!file.isEmpty()) {
+	            	body.add("file[]", new MultipartInputStreamFileResource(file.getInputStream(), file.getOriginalFilename()));
+	            }
+	        }
+			String jsonInString = mapper.writeValueAsString(info);
+			body.add("data", jsonInString);
+			final HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+			ResponseEntity<UploadFileResponse[]> entityResponse = restTemplate.postForEntity(targetUrl, requestEntity, UploadFileResponse[].class);
+			 Arrays.asList(entityResponse);
+			List<UploadFileResponse> x = Arrays.asList(entityResponse.getBody());
+			return x;
 		} catch (Exception e) {
-			LOGGER.error("ERROR: CustomerServiceImpl.signIn.Exception", e);
-			throw new CustomException(messageUtil.getMessage("customer.signin.error.internal_failure"), e);
-		} finally {
-			LOGGER.debug("CustomerServiceImpl.signIn finish");
+			LOGGER.error("ERROR: FileServiceImpl.consumeWs", e);
+			throw new FileManagerException(e);
 		}
 	}
 
-
 	@Override
-	public List<UploadFileResponse> delete(FileDTO<PostCustomerDTO> file) {
+	public List<UploadFileResponse> delete(FileDTO info) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<UploadFileResponse> consumeWs(final FileDTO<PostCustomerDTO> dto) {
-		try {
-			 final String targetUrl = "";
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-			MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-			for (MultipartFile x : dto.getFiles()) {
-				body.add("file[]", x);
-			}
-			body.add("data", dto.getData());
-			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-			ResponseEntity<List> entityResponse = restTemplate.postForEntity(targetUrl, requestEntity, List.class);
-			return (List<UploadFileResponse> ) entityResponse.getBody();
-		} catch (Exception e) {
-			LOGGER.error("ERROR: FileServiceImpl.consumeWs", e);
-			throw e;
-		}
-	}
-	
 }

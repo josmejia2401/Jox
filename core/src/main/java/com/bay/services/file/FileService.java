@@ -2,10 +2,13 @@ package com.bay.services.file;
 
 import java.util.List;
 
-import com.bay.common.dto.file.FileDTO;
-import com.bay.common.dto.file.UploadFileResponse;
+import org.springframework.web.multipart.MultipartFile;
 
-public interface FileService<T> {
-	List<UploadFileResponse> add(FileDTO<T> file);
-	List<UploadFileResponse> delete(FileDTO<T> file);
+import com.bay.common.dto.filemananer.FileDTO;
+import com.bay.common.dto.filemananer.UploadFileResponse;
+import com.bay.common.exceptions.FileManagerException;
+
+public interface FileService {
+	List<UploadFileResponse> add(FileDTO info, MultipartFile[] file) throws FileManagerException;
+	List<UploadFileResponse> delete(FileDTO info) throws FileManagerException;
 }

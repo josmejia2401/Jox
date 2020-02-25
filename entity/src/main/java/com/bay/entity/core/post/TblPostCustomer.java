@@ -24,7 +24,7 @@ public class TblPostCustomer {
 
 	@Column(name = "files_names", nullable = true, columnDefinition = "text[]")
 	private String[] filesNames;
-
+	
 	@Column(name = "id_customer", nullable = false)
 	private Long idCustomer;
 

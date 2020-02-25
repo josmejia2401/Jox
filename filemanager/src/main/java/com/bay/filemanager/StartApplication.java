@@ -1,5 +1,8 @@
 package com.bay.filemanager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -7,12 +10,20 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import com.bay.filemanager.property.FileStorageProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({
-		FileStorageProperties.class
-})
-public class StartApplication {
+@EnableConfigurationProperties({ FileStorageProperties.class })
+public class StartApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(StartApplication.class, args);
-	}
+    private static final Logger log = LoggerFactory.getLogger(StartApplication.class);
+
+   
+    
+    public static void main(String[] args) {
+        SpringApplication.run(StartApplication.class, args);
+    }
+    
+    @Override
+    public void run(String... args) {
+        log.info("StartApplication...");
+    }
+    
 }

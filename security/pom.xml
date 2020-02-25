@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bay</groupId>
-	<artifactId>notification</artifactId>
+	<artifactId>security</artifactId>
 	<packaging>jar</packaging>
-	<name>ms-notification-app</name>
+	<name>ms-security-app</name>
 	<version>1.0</version>
-	
+
 	<parent>
         <groupId>com.bay</groupId>
         <artifactId>XApp</artifactId>
@@ -20,10 +20,13 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.4.RELEASE</version>
+		<relativePath />
 	</parent>
 	-->
-	
+
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<java.version>1.8</java.version>
 		<downloadSources>true</downloadSources>
 		<downloadJavadocs>true</downloadJavadocs>
@@ -32,6 +35,7 @@
 
 
 	<dependencies>
+
 		<!-- BAY -->
 		<dependency>
 			<groupId>com.bay</groupId>
@@ -39,10 +43,10 @@
 			<version>1.0</version>
 		</dependency>
 		
-		<!-- spring security -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+			<groupId>com.bay</groupId>
+			<artifactId>entity</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 		<!-- spring mvc, rest -->
@@ -51,28 +55,29 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- send email -->
+		<!-- spring security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- Model Mapper -->
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20160810</version>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.5</version>
 		</dependency>
 
-
+		<!-- in-memory database -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 		</dependency>
 
 	</dependencies>
 
 	<build>
-		<finalName>NotificationMaster</finalName>
+		<finalName>SpringBoot</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

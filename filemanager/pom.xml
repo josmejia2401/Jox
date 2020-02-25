@@ -10,14 +10,22 @@
 
 	<name>filemanager</name>
 	<description>File manager</description>
-
+	
+	<parent>
+        <groupId>com.bay</groupId>
+        <artifactId>XApp</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+	
+	<!--
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.4.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath />
 	</parent>
-
+	-->
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -26,11 +34,24 @@
 	</properties>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>com.bay</groupId>
+			<artifactId>common</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		
+		<!-- Model Mapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.5</version>
+		</dependency>
 		<!--dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-test</artifactId> 
 			<scope>test</scope> </dependency -->
 	</dependencies>

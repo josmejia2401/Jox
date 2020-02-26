@@ -1,4 +1,4 @@
-package com.bay;
+package com.bay.core;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -7,10 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -19,6 +23,11 @@ import com.bay.entity.core.location.TblLocation;
 
 @SpringBootApplication
 @EnableAsync
+@EnableJpaRepositories("com.bay.core.repositories.*")
+@ComponentScan(basePackages = { "com.bay.*" })
+@EntityScan("com.bay.entity.*")  
+@EnableAutoConfiguration
+
 //@EnableWebSecurity(debug = true)
 //@ComponentScan({"com.bay"})
 //@EntityScan("com.bay.entities")

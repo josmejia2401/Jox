@@ -1,4 +1,4 @@
-package com.bay.config;
+package com.bay.core.config;
 
 import java.util.concurrent.Executor;
 
@@ -6,20 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.bay.core.converter.StringToPostCustomerDTOConverter;
 
 @Configuration
 @PropertySource({ "classpath:application-dev.properties" })
 @Profile("dev")
-public class PropertiesSourceDev extends WebSecurityConfigurerAdapter {
+public class PropertiesSourceDev implements WebMvcConfigurer {
 	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable();
-	}
 	
 	@Bean
 	public RestTemplate getRestTemplate() {
@@ -38,4 +36,9 @@ public class PropertiesSourceDev extends WebSecurityConfigurerAdapter {
 	  }
 	
 	
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addConverter(new StringToPostCustomerDTOConverter());
+	}
+
 }

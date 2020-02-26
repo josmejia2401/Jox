@@ -1,1 +1,1 @@
-package com.bay.controller.post;
+package com.bay.core.controller.post;

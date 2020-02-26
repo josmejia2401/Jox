@@ -1,4 +1,4 @@
-package com.bay.facade.post;
+package com.bay.core.facade.post;
 
 import java.util.List;
 

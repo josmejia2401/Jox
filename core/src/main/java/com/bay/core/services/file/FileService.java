@@ -1,4 +1,4 @@
-package com.bay.services.file;
+package com.bay.core.services.file;
 
 import java.util.List;
 

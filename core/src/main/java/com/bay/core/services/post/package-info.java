@@ -1,1 +1,1 @@
-package com.bay.services.post;
+package com.bay.core.services.post;

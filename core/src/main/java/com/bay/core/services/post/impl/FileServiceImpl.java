@@ -1,4 +1,4 @@
-package com.bay.services.post.impl;
+package com.bay.core.services.post.impl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.bay.common.dto.filemananer.FileDTO;
 import com.bay.common.dto.filemananer.UploadFileResponse;
 import com.bay.common.exceptions.FileManagerException;
 import com.bay.common.util.MultipartInputStreamFileResource;
-import com.bay.services.file.FileService;
+import com.bay.core.services.file.FileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -39,7 +39,7 @@ public class FileServiceImpl implements FileService {
 			if (mapper == null) {
 				 mapper = new ObjectMapper();
 			}
-			final String targetUrl = "localhost:8082/ms-filemanager-dev/api/post/upload";			
+			final String targetUrl = "http://localhost:8082/ms-filemanager-dev/api/post/uploadFiles";			
 			final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 			for (MultipartFile file : files) {
 	            if (!file.isEmpty()) {
@@ -52,7 +52,6 @@ public class FileServiceImpl implements FileService {
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 			ResponseEntity<UploadFileResponse[]> entityResponse = restTemplate.postForEntity(targetUrl, requestEntity, UploadFileResponse[].class);
-			 Arrays.asList(entityResponse);
 			List<UploadFileResponse> x = Arrays.asList(entityResponse.getBody());
 			return x;
 		} catch (Exception e) {

@@ -21,9 +21,6 @@ public class TblPostCustomer {
 
 	@Column(name = "text", nullable = false)
 	private String text;
-
-	@Column(name = "files_names", nullable = true, columnDefinition = "text[]")
-	private String[] filesNames;
 	
 	@Column(name = "id_customer", nullable = false)
 	private Long idCustomer;
@@ -52,14 +49,6 @@ public class TblPostCustomer {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public String[] getFilesNames() {
-		return filesNames;
-	}
-
-	public void setFilesNames(String[] filesNames) {
-		this.filesNames = filesNames;
 	}
 
 	public Long getIdCustomer() {

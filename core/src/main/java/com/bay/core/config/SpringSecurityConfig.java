@@ -1,18 +1,22 @@
-package com.bay.config;
+package com.bay.core.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.bay.core.converter.StringToPostCustomerDTOConverter;
 
 
 @Configuration
 @PropertySource({"classpath:application.properties"})
 @Profile("default")
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig implements WebMvcConfigurer {
+
 	@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-    }
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addConverter(new StringToPostCustomerDTOConverter());
+	}
+
 }

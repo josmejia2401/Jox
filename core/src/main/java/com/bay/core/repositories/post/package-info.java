@@ -1,1 +1,1 @@
-package com.bay.repositories.post;
+package com.bay.core.repositories.post;

@@ -1,7 +1,6 @@
-package com.bay.services.post.impl;
+package com.bay.core.services.post.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -12,16 +11,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bay.common.dto.core.LocationDTO;
 import com.bay.common.dto.core.post.PostCustomerDTO;
+import com.bay.common.dto.core.post.PostFileDTO;
 import com.bay.common.dto.filemananer.FileDTO;
 import com.bay.common.dto.filemananer.UploadFileResponse;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.common.exceptions.BayException;
 import com.bay.common.exceptions.CustomException;
 import com.bay.common.util.MessageUtil;
+import com.bay.core.repositories.post.PostRepository;
+import com.bay.core.services.file.FileService;
+import com.bay.core.services.post.PostFileService;
+import com.bay.core.services.post.PostService;
 import com.bay.entity.core.post.TblPostCustomer;
-import com.bay.repositories.post.PostRepository;
-import com.bay.services.file.FileService;
-import com.bay.services.post.PostService;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -30,6 +31,9 @@ public class PostServiceImpl implements PostService {
 	
 	@Autowired
 	private PostRepository postRepo;
+	
+	@Autowired
+	private PostFileService postFileService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -59,12 +63,12 @@ public class PostServiceImpl implements PostService {
 			if (post != null) {
 				ResponseDTO<PostCustomerDTO> response = new ResponseDTO<>();
 				List<UploadFileResponse> result = this.saveFiles(post, files);
-				List<String> path = result.stream().map(x -> x.getFileDownloadUri()).collect(Collectors.toList());
-				post.setFilesNames(path.toArray(new String[path.size()]));
 				TblPostCustomer entity = modelMapper.map(post, TblPostCustomer.class);
 				entity = postRepo.save(entity);
 				if (entity != null && entity.getId() != null && entity.getId() != 0) {
+					List<PostFileDTO> postFiles = this.postFileService.add(entity.getId(), files, result);
 					post.setId(entity.getId());
+					post.setPostFiles(postFiles);
 					response.setCode(0L);
 					response.setData(post);
 				} else {
@@ -98,5 +102,4 @@ public class PostServiceImpl implements PostService {
 		file.setUsername(dto.getIdCustomer().toString());
 		return this.fileService.add(file, files);
 	}
-
 }

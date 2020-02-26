@@ -47,12 +47,12 @@ public class FilePostController {
     public UploadFileResponse uploadFile(@RequestParam("file[]") @Valid @NotNull @NotBlank MultipartFile file, @RequestParam("user") @Valid FileDTO user) {
         String fileName = fileStorageService.storeFile(file, user);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/post/download/").path(fileName).toUriString();
-        return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+        return new UploadFileResponse(fileName.substring(fileName.lastIndexOf("/")+1, fileName.length()), fileDownloadUri, file.getContentType(), file.getSize());
     }
     
     @PostMapping("uploadFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("file[]") @Valid @NotNull @NotBlank MultipartFile[] files, @RequestParam("user") @Valid FileDTO user) {
-        return Arrays.asList(files).stream().map(file -> uploadFile(file, user)).collect(Collectors.toList());
+    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("file[]") @Valid @NotNull @NotBlank MultipartFile[] files, @RequestParam("data") @Valid FileDTO data) {
+        return Arrays.asList(files).stream().map(file -> uploadFile(file, data)).collect(Collectors.toList());
     }
 
     @GetMapping("download/{username}/{id}/{fileName:.+}")

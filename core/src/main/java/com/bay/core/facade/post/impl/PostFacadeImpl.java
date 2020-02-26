@@ -1,4 +1,4 @@
-package com.bay.facade.post.impl;
+package com.bay.core.facade.post.impl;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bay.common.dto.core.LocationDTO;
 import com.bay.common.dto.core.post.PostCustomerDTO;
 import com.bay.common.dto.response.ResponseDTO;
-import com.bay.facade.post.PostFacade;
-import com.bay.services.post.PostService;
+import com.bay.core.facade.post.PostFacade;
+import com.bay.core.services.post.PostService;
 
 @Service
 public class PostFacadeImpl implements PostFacade {

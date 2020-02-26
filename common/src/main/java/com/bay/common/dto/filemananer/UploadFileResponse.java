@@ -1,13 +1,22 @@
 package com.bay.common.dto.filemananer;
 
+import java.io.Serializable;
 
-public class UploadFileResponse {
-    private String fileName;
+public class UploadFileResponse implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String fileName;
     private String fileDownloadUri;
     private String fileType;
     private long size;
 
-    public UploadFileResponse(String fileName, String fileDownloadUri, String fileType, long size) {
+    public UploadFileResponse() {
+		super();
+	}
+
+	public UploadFileResponse(String fileName, String fileDownloadUri, String fileType, long size) {
         this.fileName = fileName;
         this.fileDownloadUri = fileDownloadUri;
         this.fileType = fileType;

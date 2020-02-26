@@ -3,11 +3,11 @@ package com.bay.security.facade.customer.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bay.common.dto.core.CustomerDTO;
-import com.bay.common.dto.core.ForgotPasswordDTO;
-import com.bay.common.dto.core.RecoverAccountDTO;
-import com.bay.common.dto.core.VerifyAccountDTO;
 import com.bay.common.dto.response.ResponseDTO;
+import com.bay.common.dto.security.CustomerDTO;
+import com.bay.common.dto.security.ForgotPasswordDTO;
+import com.bay.common.dto.security.RecoverAccountDTO;
+import com.bay.common.dto.security.VerifyAccountDTO;
 import com.bay.security.facade.customer.CustomerFacade;
 import com.bay.security.services.customer.CustomerService;
 

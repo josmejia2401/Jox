@@ -52,11 +52,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		errors.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
 	}
-
-	/*@ExceptionHandler(BookUnSupportedFieldPatchException.class)
-	public void springUnSupportedFieldPatch(HttpServletResponse response) throws IOException {
-		response.sendError(HttpStatus.METHOD_NOT_ALLOWED.value());
-	}*/
 	
 	// @Validate For Validating Path Variables and Request Parameters
 	@ExceptionHandler(ConstraintViolationException.class)
@@ -80,7 +75,4 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		body.put("errors", errors);
 		return new ResponseEntity<>(body, headers, status);
 	}
-
-	/*@ExceptionHandler({ HttpRequestMethodNotSupportedException.class, HttpMediaTypeNotSupportedException.class})*/
-
 }

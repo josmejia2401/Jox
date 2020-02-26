@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bay.common.dto.core.post.PostCustomerDTO;
+import com.bay.common.dto.post.PostCustomerDTO;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.core.facade.post.PostFacade;
 

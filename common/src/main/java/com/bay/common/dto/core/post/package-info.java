@@ -1,1 +1,0 @@
-package com.bay.common.dto.core.post;

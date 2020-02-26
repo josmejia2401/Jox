@@ -1,6 +1,7 @@
 package com.bay.core.services.post.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -9,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bay.common.dto.core.LocationDTO;
-import com.bay.common.dto.core.post.PostCustomerDTO;
-import com.bay.common.dto.core.post.PostFileDTO;
+import com.bay.common.dto.core.location.LocationDTO;
 import com.bay.common.dto.filemananer.FileDTO;
 import com.bay.common.dto.filemananer.UploadFileResponse;
+import com.bay.common.dto.post.PostCustomerDTO;
+import com.bay.common.dto.post.PostFileDTO;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.common.exceptions.BayException;
 import com.bay.common.exceptions.CustomException;
@@ -46,14 +47,19 @@ public class PostServiceImpl implements PostService {
 	
 	@Override
 	public ResponseDTO<List<PostCustomerDTO>> getAll(LocationDTO location) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ResponseDTO<List<PostCustomerDTO>> getMe(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		List<PostCustomerDTO> x = this.postRepo.findByUserId(Long.valueOf(username)).stream().map(i-> {
+			return modelMapper.map(i, PostCustomerDTO.class);
+		}).collect(Collectors.toList());
+		ResponseDTO<List<PostCustomerDTO>> xy = new ResponseDTO<>();
+		xy.setCode(0L);
+		xy.setData(x);
+		xy.setMessage("OK");
+		return xy;
 	}
 
 	@Override

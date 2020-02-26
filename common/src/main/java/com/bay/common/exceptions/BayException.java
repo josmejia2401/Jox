@@ -1,7 +1,12 @@
 package com.bay.common.exceptions;
 
 public class BayException extends RuntimeException {
-    public BayException(String id) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public BayException(String id) {
         super(id);
     }
 

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import com.bay.common.dto.core.post.PostCustomerDTO;
+import com.bay.common.dto.post.PostCustomerDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component

@@ -1,4 +1,4 @@
-package com.bay.common.dto.core;
+package com.bay.common.dto.security;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;

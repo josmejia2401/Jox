@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bay.common.dto.core.LocationDTO;
-import com.bay.common.dto.core.post.PostCustomerDTO;
+import com.bay.common.dto.core.location.LocationDTO;
+import com.bay.common.dto.post.PostCustomerDTO;
 import com.bay.common.dto.response.ResponseDTO;
 
 public interface PostService {

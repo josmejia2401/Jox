@@ -1,4 +1,4 @@
-package com.bay.common.dto.core;
+package com.bay.common.dto.core.employee;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import com.bay.common.dto.master.DetailDTO;
 import com.bay.common.validators.EmailAnotation;
 
-public class UserDTO implements Serializable {
+public class EmployeeDTO implements Serializable {
 
 	/**
 	 * 

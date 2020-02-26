@@ -1,10 +1,12 @@
-package com.bay.common.dto.core;
+package com.bay.common.dto.security;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
+import com.bay.common.dto.core.employee.EmployeeDTO;
+import com.bay.common.dto.core.location.LocationDTO;
 import com.bay.common.dto.master.DetailDTO;
 
 
@@ -38,7 +40,7 @@ public class CustomerDTO implements Serializable {
 	
 	private List<LocationDTO> locations;
 
-	private List<UserDTO> employees;
+	private List<EmployeeDTO> employees;
 	
 	private List<DetailDTO> typesOfCustomers;
 	
@@ -108,11 +110,11 @@ public class CustomerDTO implements Serializable {
 		this.locations = locations;
 	}
 
-	public List<UserDTO> getEmployees() {
+	public List<EmployeeDTO> getEmployees() {
 		return employees;
 	}
 
-	public void setEmployees(List<UserDTO> employees) {
+	public void setEmployees(List<EmployeeDTO> employees) {
 		this.employees = employees;
 	}
 

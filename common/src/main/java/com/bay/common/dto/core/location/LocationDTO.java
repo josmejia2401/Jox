@@ -1,4 +1,4 @@
-package com.bay.common.dto.core;
+package com.bay.common.dto.core.location;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

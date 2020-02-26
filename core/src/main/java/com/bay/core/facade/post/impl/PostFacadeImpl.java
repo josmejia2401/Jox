@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bay.common.dto.core.LocationDTO;
-import com.bay.common.dto.core.post.PostCustomerDTO;
+import com.bay.common.dto.core.location.LocationDTO;
+import com.bay.common.dto.post.PostCustomerDTO;
 import com.bay.common.dto.response.ResponseDTO;
 import com.bay.core.facade.post.PostFacade;
 import com.bay.core.services.post.PostService;

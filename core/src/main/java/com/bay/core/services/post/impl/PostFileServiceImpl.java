@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bay.common.dto.core.post.PostFileDTO;
 import com.bay.common.dto.filemananer.UploadFileResponse;
+import com.bay.common.dto.post.PostFileDTO;
 import com.bay.core.repositories.post.PostFileRepository;
 import com.bay.core.services.post.PostFileService;
 import com.bay.entity.core.post.TblPostFile;

@@ -1,10 +1,10 @@
 package com.bay.security.services.customer;
 
-import com.bay.common.dto.core.CustomerDTO;
-import com.bay.common.dto.core.ForgotPasswordDTO;
-import com.bay.common.dto.core.RecoverAccountDTO;
-import com.bay.common.dto.core.VerifyAccountDTO;
 import com.bay.common.dto.response.ResponseDTO;
+import com.bay.common.dto.security.CustomerDTO;
+import com.bay.common.dto.security.ForgotPasswordDTO;
+import com.bay.common.dto.security.RecoverAccountDTO;
+import com.bay.common.dto.security.VerifyAccountDTO;
 
 public interface CustomerService {
 	ResponseDTO<CustomerDTO> signIn(String username, String password);

@@ -29,7 +29,7 @@ public class PostController {
 
 	@PostMapping("add")
 	@ResponseStatus(HttpStatus.OK)
-    ResponseDTO<PostCustomerDTO> add(@RequestParam("file[]") @Valid @NotNull MultipartFile[] file, @RequestParam("user") @Valid  PostCustomerDTO post) {
+    ResponseDTO<PostCustomerDTO> add(@RequestParam("file[]") @Valid @NotNull MultipartFile[] file, @RequestParam("data") @Valid  PostCustomerDTO post) {
 		return this.post.add(post, file);
 	}
 	

@@ -68,11 +68,17 @@ public class PostServiceImpl implements PostService {
 		try {
 			if (post != null) {
 				ResponseDTO<PostCustomerDTO> response = new ResponseDTO<>();
-				List<UploadFileResponse> result = this.saveFiles(post, files);
+				List<UploadFileResponse> result = null;
+				if (files != null && files.length > 0) {
+					result = this.saveFiles(post, files);
+				}
 				TblPostCustomer entity = modelMapper.map(post, TblPostCustomer.class);
 				entity = postRepo.save(entity);
 				if (entity != null && entity.getId() != null && entity.getId() != 0) {
-					List<PostFileDTO> postFiles = this.postFileService.add(entity.getId(), files, result);
+					List<PostFileDTO> postFiles = null;
+					if (result != null && !result.isEmpty()) {
+						postFiles = this.postFileService.add(entity.getId(), files, result);
+					}
 					post.setId(entity.getId());
 					post.setPostFiles(postFiles);
 					response.setCode(0L);

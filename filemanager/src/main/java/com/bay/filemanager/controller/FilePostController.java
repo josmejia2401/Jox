@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -43,10 +44,14 @@ public class FilePostController {
     @Autowired
     private FileStorageService fileStorageService;
     
+    @PostConstruct
+    private void ini() {
+    }
+    
     @PostMapping("upload")
     public UploadFileResponse uploadFile(@RequestParam("file[]") @Valid @NotNull @NotBlank MultipartFile file, @RequestParam("user") @Valid FileDTO user) {
         String fileName = fileStorageService.storeFile(file, user);
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/post/download/").path(fileName).toUriString();
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().host("192.168.1.52").path("/post/download/").path(fileName).toUriString();
         return new UploadFileResponse(fileName.substring(fileName.lastIndexOf("/")+1, fileName.length()), fileDownloadUri, file.getContentType(), file.getSize());
     }
     
@@ -68,6 +73,7 @@ public class FilePostController {
         if(contentType == null) {
             contentType = "application/octet-stream";
         }
+        //return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "filename=\"" + resource.getFilename() + "\"").body(resource);
     }
 
